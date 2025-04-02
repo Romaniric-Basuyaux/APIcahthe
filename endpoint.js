@@ -294,16 +294,25 @@ router.delete('/client/5', (req, res) => {
 });
 
 
-router.get("/produit", (req, res) => {
+router.get("/produitfilter", (req, res) => {
     console.log("Requête reçue avec req.query :", req.query);
-    const { filter } = req.query;
+    const { cat, filter } = req.query;
     let sqlQuery = `SELECT produit.*, categorie.type_categorie FROM produit
-JOIN categorie ON _categorie.id_categorie = produit.id_categorie`;
+JOIN categorie ON categorie.id_categorie = produit.id_categorie`;
+
+
+    if (cat === "cafe") {
+        sqlQuery += " WHERE produit.id_categorie = 1";
+    } else if (cat === "the") {
+        sqlQuery += " WHERE produit.id_categorie = 2";
+    } else if  (cat === "acc")  {
+        sqlQuery += " WHERE produit.id_categorie = 3";
+    }
 
     if (filter === "desc") {
-        sqlQuery += " ORDER BY product_price DESC";
+        sqlQuery += " ORDER BY prix_ht_produit DESC";
     } else if (filter === "asc") {
-        sqlQuery += " ORDER BY product_price ASC";
+        sqlQuery += " ORDER BY prix_ht_produit ASC";
     }
 
     console.log("Requête SQL exécutée :", sqlQuery);
